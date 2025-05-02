@@ -20,9 +20,18 @@ const loginSchema = object({
 
 const signupSchema = object({
   email: z.string().email("Invalid email address.").trim(),
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+  username: z
+    .string()
+    .min(5, {
+      message: "Username must be at least 5 characters.",
+    })
+    .max(10, {
+      message: "Username must be at most 10 characters.",
+    })
+    .regex(/[a-zA-Z0-9_]/, {
+      message: "Username contain no special characters.",
+    })
+    .trim(),
   password: z
     .string()
     .min(8, { message: "Be at least 8 characters long" })
@@ -32,6 +41,7 @@ const signupSchema = object({
       message: "Contain at least one special character.",
     })
     .trim(),
+  role: z.string(),
 });
 
 export { loginSchema, signupSchema };
@@ -42,6 +52,7 @@ export type FormState =
         username?: string[];
         email?: string[];
         password?: string[];
+        role?: string[];
       };
       message?: string;
     }
