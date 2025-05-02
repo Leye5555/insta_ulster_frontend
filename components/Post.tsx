@@ -51,7 +51,17 @@ const Post = ({
       {/* Post Header */}
       <div className="flex justify-between items-center p-3">
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-gray-200 mr-3"></div>
+          <div className="w-8 h-8 rounded-full bg-gray-200 mr-3">
+            <Image
+              src={`https://ui-avatars.com/api/?name=${
+                username ?? "username"
+              }&background=random`}
+              width={40}
+              height={40}
+              alt="user profile"
+              className="rounded-full"
+            />
+          </div>
           <div className="flex items-center">
             <span className="font-semibold text-sm">{username}</span>
             {verified && <span className="text-blue-500 ml-1">•</span>}
@@ -67,7 +77,6 @@ const Post = ({
         <div className="w-full h-full bg-gray-700">
           {mediaUrl && (
             <Image
-              fill
               src={mediaUrl}
               width={500}
               height={500}

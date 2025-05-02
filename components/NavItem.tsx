@@ -3,7 +3,6 @@ const NavItem = ({
   icon,
   label,
   active = false,
-  onClick,
 }: {
   icon: string;
   label: string;

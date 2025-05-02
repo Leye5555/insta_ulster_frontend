@@ -33,7 +33,7 @@ export function middleware(req: NextRequest) {
   // Object.entries(corsOptions).forEach(([key, value]) => {
   //   response.headers.set(key, value);
   // });
-
+  console.log("ran");
   const user = req.cookies.get("AUTH")?.value;
   const authPaths = [
     "/signup",
@@ -44,9 +44,9 @@ export function middleware(req: NextRequest) {
   ];
   const urlPath = new URL(req.url).pathname;
   console.log(urlPath);
-  if (!user) {
+  if (!user && !authPaths.includes(urlPath)) {
     return NextResponse.redirect(new URL("/login/", req.url));
-  } else if (authPaths.includes(urlPath)) {
+  } else if (user && authPaths.includes(urlPath)) {
     return NextResponse.redirect(new URL("/", req.url));
   } else {
     return NextResponse.next();

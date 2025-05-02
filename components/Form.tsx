@@ -73,13 +73,13 @@ export default function AuthForm({ isSignUp = true }: { isSignUp?: boolean }) {
       toast.success("Account created successfully, Login to continue", {
         id: "success",
       });
-      setTimeout(() => router.push("/login"), 2000);
+      setTimeout(() => router.push("/login"), 1000);
     } else if (authState.status === "succeeded_login") {
       setPending(false);
       toast.success("Login successful", {
         id: "success",
       });
-      setTimeout(() => router.push("/"), 2000);
+      setTimeout(() => router.push("/"), 1000);
     } else if (authState.status === "failed") {
       setPending(false);
       toast.success("something went wrong", {

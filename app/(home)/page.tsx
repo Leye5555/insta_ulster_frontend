@@ -10,6 +10,12 @@ import { formatDistanceToNow } from "date-fns";
 import { logout } from "@/services/redux/slices/authSlice";
 import { useAppDispatch, useAppSelector } from "@/services/redux/store";
 import { useRouter } from "next/navigation";
+import { AlertDialogLogout } from "@/components/LogoutDialog";
+import Cookies from "universal-cookie";
+import toast from "react-hot-toast";
+import { fetchPosts, reset } from "@/services/redux/slices/postSlice";
+import { fetchUser } from "@/services/redux/slices/user";
+const cookies = new Cookies(null, { path: "/" });
 // In a real implementation, import proper icons or SVGs
 
 export const dynamic = "force-dynamic"; // remove cache
@@ -24,8 +30,10 @@ const Page = () => {
   ];
   const { state } = useContext(GlobalContext);
   const dispatch = useAppDispatch();
+  const [userLogout, setUserLogout] = useState(false);
 
-  const authState = useAppSelector((state) => state.auth);
+  const postState = useAppSelector((state) => state.posts);
+  const userState = useAppSelector((state) => state.users);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const handleNavItemClick = (item: string) => {
@@ -47,10 +55,7 @@ const Page = () => {
       case "Profile":
         console.log("Profile");
         break;
-      case "Logout":
-        dispatch(logout());
 
-        break;
       default:
         console.log("Default");
         break;
@@ -58,10 +63,45 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (!authState.token) {
+    if (userLogout) {
+      dispatch(logout());
+      toast.success("Logout successful. Redirecting...");
+      setTimeout(() => router.push("/login"), 1000);
+    }
+  }, [userLogout]);
+
+  useEffect(() => {
+    if (cookies.get("AUTH") === undefined) {
       router.push("/login");
     }
-  }, [authState]);
+  });
+
+  useEffect(() => {
+    const baseNumberOfPosts = 1;
+    if (
+      cookies.get("AUTH") &&
+      postState.posts_meta.posts.length === baseNumberOfPosts
+    ) {
+      dispatch(fetchPosts(cookies.get("AUTH")));
+    }
+    if (postState.status === "succeeded") {
+      dispatch(reset());
+    }
+  }, [dispatch, postState.posts_meta.posts.length, postState.status]);
+
+  useEffect(() => {
+    if (cookies.get("AUTH")) {
+      const [, token_sub] = cookies.get("AUTH").split(".");
+      const user_meta = JSON.parse(atob(token_sub));
+      dispatch(
+        fetchUser({ token: cookies.get("AUTH"), id: user_meta?.userId })
+      );
+    }
+  }, [dispatch]);
+
+  console.log(postState.posts_meta.posts);
+  console.log(userState.user);
+  console.log(userState.users);
 
   return (
     <>
@@ -87,11 +127,9 @@ const Page = () => {
             ))}
           </nav>
           <div className="mt-auto pt-4 hidden lg:block">
-            <NavItem
-              onClick={() => handleNavItemClick("Logout")}
-              icon="🚪"
-              label="Logout"
-            />
+            <AlertDialogLogout setUserLogout={setUserLogout}>
+              <NavItem icon="🚪" label="Logout" />
+            </AlertDialogLogout>
           </div>
         </aside>
 
@@ -127,21 +165,23 @@ const Page = () => {
             </div>
             {/* Posts */}
             <div className="pb-8 max-w-[470px] mx-auto">
-              {state.posts_state.posts.map((post) => (
+              {postState.posts_meta.posts.map((post) => (
                 <Post
-                  userId={post.userId}
-                  key={post.id}
-                  username={post.username}
-                  verified={post.verified}
-                  timeAgo={formatDistanceToNow(new Date(post.createdAt))}
-                  likes={(post.likes || 0) + state.likes_state.likes.length}
-                  caption={post.caption}
-                  commentCount={post.commentCount}
-                  mediaUrl={post.mediaUrl}
-                  postId={post.id}
+                  userId={post._id}
+                  key={post._id}
+                  username={post.user?.username ?? userState.user?.username}
+                  verified={false}
+                  timeAgo={formatDistanceToNow(new Date(post.createdAt || ""))}
+                  likes={
+                    (post.likes?.length || 0) + state.likes_state.likes.length
+                  }
+                  caption={post.content}
+                  commentCount={post.comments?.length}
+                  mediaUrl={post.img_url + `?${postState.posts_meta.sas_token}`}
+                  postId={post._id}
                 />
               ))}
-              {state.posts_state.posts.length === 0 && (
+              {postState.posts_meta.posts.length === 0 && (
                 <>
                   <Post
                     userId="122334"
@@ -174,10 +214,22 @@ const Page = () => {
           {/* Current User */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <div className="h-11 w-11 rounded-full bg-gray-200"></div>
+              <div className="h-11 w-11 rounded-full bg-gray-200">
+                <Image
+                  src={`https://ui-avatars.com/api/?name=${
+                    userState.user.username ?? "username"
+                  }&background=random`}
+                  width={40}
+                  height={40}
+                  alt="user profile"
+                  className="rounded-full"
+                />
+              </div>
               <div className="ml-3">
-                <p className="font-medium text-sm">mr_leye_e</p>
-                <p className="text-gray-500 text-sm">leye</p>
+                <p className="font-medium text-sm">
+                  {userState.user.username ?? "username"}
+                </p>
+                {/* <p className="text-gray-500 text-sm">leye</p> */}
               </div>
             </div>
             <button className="text-blue-500 text-xs font-semibold">

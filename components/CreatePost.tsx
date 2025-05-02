@@ -4,6 +4,15 @@ import React, { useEffect } from "react";
 import ImagePicker from "./ImagePicker";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { postSchema } from "@/lib/definitions/schema";
+import { useAppDispatch, useAppSelector } from "@/services/redux/store";
+import { createPost } from "@/services/redux/slices/postSlice";
+import Cookies from "universal-cookie";
+import { z } from "zod";
+import { cn } from "@/lib/utils";
+const cookies = new Cookies(null, { path: "/" });
 
 const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
   const [selectedFile, setSelectedFile] = React.useState<
@@ -11,11 +20,35 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
   >();
   const [selectedFileUrl, setSelectedFileUrl] = React.useState("");
   const [caption, setCaption] = React.useState("");
+  const dispatch = useAppDispatch();
+  const postState = useAppSelector((state) => state.posts);
+
+  const [isLoading, setIsLoading] = React.useState(false);
   const handleReset = () => {
     setSelectedFile(null);
     setSelectedFileUrl("");
     setCaption("");
   };
+
+  const onSubmit = (data: z.infer<typeof postSchema>) => {
+    setIsLoading(true);
+    console.log(data);
+    dispatch(
+      createPost({
+        content: data.content,
+        token: cookies.get("AUTH"),
+        post_image: selectedFile as File,
+      })
+    );
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof postSchema>>({
+    resolver: zodResolver(postSchema),
+  });
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -44,6 +77,18 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
     };
   }, [selectedFile]);
 
+  useEffect(() => {
+    console.log(postState.status);
+    if (postState.status === "succeeded") {
+      setIsLoading(false);
+      handleReset();
+      onClose();
+    }
+    if (postState.status === "failed") {
+      setIsLoading(false);
+    }
+  }, [postState.status, onClose, handleReset]);
+
   return (
     <div
       tabIndex={0}
@@ -55,7 +100,10 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60"
     >
       {/* Modal Container */}
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 md:mx-0 flex flex-col items-center relative">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white rounded-xl shadow-lg w-full max-w-lg mx-4 md:mx-0 flex flex-col items-center relative"
+      >
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-2xl text-gray-400 hover:text-gray-700"
@@ -71,7 +119,7 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
         {/* Content */}
         {!caption &&
           (selectedFile ? (
-            <div className=" border border-dashed border-gray-400 rounded-md relative min-w-full min-h-[max(500px,80vw)] flex-1 overflow-hidden">
+            <div className=" border border-dashed border-gray-400 rounded-md relative min-w-full min-h-[max(500px,80vh)] max-h-[60vh] flex-1 overflow-hidden">
               <button onClick={handleReset} className="relative z-10">
                 <ArrowLeft color="white" size={30} />
               </button>
@@ -81,7 +129,7 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
                   alt="selected image"
                   width={200}
                   height={200}
-                  className="w-full h-full object-cover "
+                  className="w-full h-full  object-cover "
                 />
               </div>
               <button
@@ -105,11 +153,16 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
             <textarea
               rows={4}
               cols={50}
-              onChange={(e) => setCaption(e.target.value)}
+              required
+              {...register("content")}
               placeholder="Write a caption..."
               className="w-full px-4 py-2"
             />
-
+            {errors.content && (
+              <span className="text-red-500 text-sm">
+                {errors.content.message}
+              </span>
+            )}
             <div className="flex gap-4">
               <button
                 onClick={() => handleReset()}
@@ -117,13 +170,19 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
               >
                 Cancel
               </button>
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-md flex-[4]">
-                Post
+              <button
+                disabled={isLoading}
+                className={cn(
+                  "bg-blue-500 text-white px-4 py-2 rounded-md flex-[4]",
+                  isLoading && "opacity-50"
+                )}
+              >
+                {isLoading ? "Loading..." : "Post"}
               </button>
             </div>
           </div>
         )}
-      </div>
+      </form>
     </div>
   );
 };

@@ -53,6 +53,8 @@ const authSlice = createSlice({
   reducers: {
     logout: (state) => {
       state.token = null;
+      cookies.remove("AUTH");
+      state.status = "idle";
     },
   },
   extraReducers: (builder) => {

@@ -43,8 +43,10 @@ const signupSchema = object({
     .trim(),
   role: z.string(),
 });
-
-export { loginSchema, signupSchema };
+const postSchema = object({
+  content: z.string().min(1, { message: "Content is required." }),
+});
+export { loginSchema, signupSchema, postSchema };
 
 export type FormState =
   | {
