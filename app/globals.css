@@ -8,8 +8,6 @@
   }
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -66,8 +64,6 @@
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
@@ -75,4 +71,52 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.react-comments .overlay,
+.react-comments .form {
+  padding: 0 !important;
+}
+.react-comments .comment-title,
+.react-comments .hr-style,
+.react-comments .userImg,
+.react-comments .postBtn {
+  display: none !important;
+}
+
+.react-comments form.form {
+  background-color: transparent !important;
+}
+
+.react-comments .postComment {
+  border: none !important;
+  margin-left: 20px !important;
+}
+.react-comments .postComment:focus {
+  box-shadow: none !important;
+  border: none !important;
+}
+.react-comments .emoji-icon {
+  top: 0px !important;
+}
+
+.react-comments * {
+  font-size: 12px !important;
+}
+.react-comments .commentsTwo img {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.react-comments .cancelBtn {
+  background-color: rgb(255, 113, 94) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 12px !important;
+}
+.react-comments .cancelBtn:hover {
+  background-color: rgb(255, 52, 52) !important;
+  border: none !important;
+  color: #fff !important;
+  font-size: 12px !important;
 }

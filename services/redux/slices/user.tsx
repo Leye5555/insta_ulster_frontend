@@ -29,7 +29,7 @@ const usersSlice = createSlice({
   name: "users",
   initialState: {
     users: [] as Array<{ _id: string; username: string; email?: string }>, // Replace with the actual post structure
-    user: {} as { _id: string; username: string; email?: string },
+    user: {} as { _id: string; username: string; email?: string; role: string },
     status: "idle",
     error: null as string | null,
   },

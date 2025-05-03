@@ -2,7 +2,18 @@
 import { GlobalContext } from "@/services/context/context";
 import { ActionTypes } from "@/services/context/enums";
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import Comments from "./Comments";
+import { useAppDispatch, useAppSelector } from "@/services/redux/store";
+import { fetchComments } from "@/services/redux/slices/commentsSlice";
+import {
+  likePost,
+  LikeType,
+  unlikePost,
+} from "@/services/redux/slices/likesSlice";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies(null, { path: "/" });
 
 // Post Component
 const Post = ({
@@ -20,36 +31,73 @@ const Post = ({
   username: string;
   verified?: boolean;
   timeAgo?: string;
-  likes?: number;
+  likes?: LikeType[];
   caption?: string;
   commentCount?: number;
   mediaUrl?: string;
-  postId?: string;
+  postId: string;
 }) => {
   const { state, dispatch } = useContext(GlobalContext);
-
+  const reduxDispatch = useAppDispatch();
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const commentsState = useAppSelector((state) => state.comments);
+  const [likeCount, setLikeCount] = useState(likes?.length || 0);
+  const [likeState, setLikeState] = useState(likes);
   const handleLike = (postId: string) => {
-    // Example: add a like from user 'user123'
+    console.log(likes);
+    const [, token_sub] = cookies.get("AUTH").split(".");
+    const user_meta = JSON.parse(atob(token_sub));
 
-    const isLiked = state.likes_state.likes.some(
-      (item) => item.userId === userId
-    );
-    if (isLiked)
-      dispatch({
-        type: ActionTypes.REMOVE_LIKE,
-        payload: { postId, userId },
-      });
-    else
-      dispatch({
-        type: ActionTypes.ADD_LIKE,
-        payload: { postId, userId },
-      });
+    if (likeState?.find((item) => item.userId === user_meta?.userId)) {
+      setLikeCount((prev) => prev - 1);
+      setLikeState((prev) =>
+        prev?.filter((item) => item.userId !== user_meta?.userId)
+      );
+      reduxDispatch(unlikePost({ postId }));
+    } else {
+      setLikeCount((prev) => prev + 1);
+      setLikeState((prev) => [
+        ...(prev as LikeType[]),
+        {
+          postId,
+          userId: user_meta?.userId,
+        },
+      ]);
+      reduxDispatch(likePost({ postId }));
+    }
+  };
+  const handleCommentClick = () => {
+    setIsCollapsed(!isCollapsed);
+    reduxDispatch(fetchComments({ postId }));
+  };
+
+  // use local storage for bookmarks
+  const [bookmarks, setBookmarks] = useState(
+    typeof window !== "undefined" ? localStorage.getItem("bookmarks") : null
+  );
+  const handleBookmark = () => {
+    if (bookmarks) {
+      const bookmarksArray = JSON.parse(bookmarks);
+      const updatedBookmarks = bookmarksArray.filter(
+        (bookmark: string) => bookmark !== postId
+      );
+      setBookmarks(updatedBookmarks);
+      localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks));
+    } else {
+      const bookmarksArray = [];
+      bookmarksArray.push(postId);
+      setBookmarks(JSON.stringify(bookmarksArray));
+      localStorage.setItem("bookmarks", JSON.stringify(bookmarksArray));
+    }
+    console.log("bookmarks", bookmarks);
+    console.log("bookmarksArray", bookmarks);
+    console.log("updatedBookmarks", bookmarks);
   };
 
   return (
-    <div className="border-b border-gray-200">
+    <div className="border-b border-gray-200 pb-12">
       {/* Post Header */}
-      <div className="flex justify-between items-center p-3">
+      <div className="flex justify-between items-center py-3">
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-gray-200 mr-3">
             <Image
@@ -87,19 +135,17 @@ const Post = ({
         </div>
       </div>
       {/* Post Actions */}
-      <div className="p-3">
+      <div className="pt-3">
         <div className="flex justify-between mb-2">
           <div className="flex space-x-4">
             <button onClick={() => handleLike(postId as string)}>❤️</button>
-            <button>💬</button>
+            <button onClick={handleCommentClick}>💬</button>
             <button>📤</button>
           </div>
           <span>🔖</span>
         </div>
-        {!!likes && (
-          <div className="text-sm font-semibold">
-            {likes.toLocaleString()} likes
-          </div>
+        {likeCount > 0 && (
+          <div className="text-sm font-semibold">{likeCount} likes</div>
         )}
         {caption && (
           <div className="mt-1 text-sm">
@@ -107,12 +153,26 @@ const Post = ({
             <span className="ml-1">{caption}</span>
           </div>
         )}
-        {commentCount && (
+        {/* {commentCount && (
           <div className="mt-1 text-gray-500 text-sm">
-            View all {commentCount} comments
+            View all{" "}
+            {commentsState.commentsObject[postId]?.length === 0
+              ? commentCount
+              : commentsState.commentsObject[postId]?.length}{" "}
+            comments
           </div>
-        )}
-        <div className="mt-2 text-gray-400 text-sm">Add a comment...</div>
+        )} */}
+
+        <div className="mt-2 react-comments">
+          <Comments
+            postId={postId as string}
+            comments={commentsState.commentsObject[postId] || []}
+            isCollapsed={isCollapsed}
+            setIsCollapsed={setIsCollapsed}
+            likes={likeCount}
+            commentCount={commentCount}
+          />
+        </div>
       </div>
     </div>
   );

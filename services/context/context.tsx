@@ -1,12 +1,8 @@
 "use client";
 import React, { createContext, Dispatch, useReducer } from "react";
-import {
-  postsReducer,
-  likesReducer,
-  commentsReducer,
-  bookmarksReducer,
-} from "./reducers"; // import your reducers here
+import { postsReducer, likesReducer, bookmarksReducer } from "./reducers"; // import your reducers here
 import { ActionTypes } from "./enums"; // your action types enum
+// import { CommentData } from "@/lib/definitions/types.d";
 
 // --- Types ---
 export type PostType = {
@@ -43,13 +39,13 @@ export type BookmarkType = {
 // --- State Types ---
 export type PostsStateType = { posts: PostType[] };
 export type LikesStateType = { likes: LikeType[] };
-export type CommentsStateType = { comments: CommentType[] };
+// export type CommentsStateType = { comments: CommentData[] };
 export type BookmarksStateType = { bookmarks: BookmarkType[] };
 
 export type InitialStateType = {
   posts_state: PostsStateType;
   likes_state: LikesStateType;
-  comments_state: CommentsStateType;
+  // comments_state: CommentsStateType;
   bookmarks_state: BookmarksStateType;
 };
 
@@ -57,7 +53,7 @@ export type InitialStateType = {
 export const initialState: InitialStateType = {
   posts_state: { posts: [] },
   likes_state: { likes: [] },
-  comments_state: { comments: [] },
+  // comments_state: { comments: [] },
   bookmarks_state: { bookmarks: [] },
 };
 
@@ -71,10 +67,10 @@ export type LikesActionType =
   | { type: ActionTypes.ADD_LIKE; payload: LikeType }
   | { type: ActionTypes.REMOVE_LIKE; payload: LikeType };
 
-export type CommentsActionType =
-  | { type: ActionTypes.ADD_COMMENT; payload: CommentType }
-  | { type: ActionTypes.REMOVE_COMMENT; payload: string }
-  | { type: ActionTypes.UPDATE_COMMENT; payload: CommentType };
+// export type CommentsActionType =
+//   | { type: ActionTypes.ADD_COMMENT; payload: CommentType }
+//   | { type: ActionTypes.REMOVE_COMMENT; payload: string }
+//   | { type: ActionTypes.UPDATE_COMMENT; payload: CommentType };
 
 export type BookmarksActionType =
   | { type: ActionTypes.ADD_BOOKMARK; payload: BookmarkType }
@@ -83,7 +79,7 @@ export type BookmarksActionType =
 export type ContextActionType =
   | PostsActionType
   | LikesActionType
-  | CommentsActionType
+  // | CommentsActionType
   | BookmarksActionType;
 
 // --- Combined Reducer ---
@@ -93,10 +89,10 @@ const combinedReducer = (
 ): InitialStateType => ({
   posts_state: postsReducer(state.posts_state, action as PostsActionType),
   likes_state: likesReducer(state.likes_state, action as LikesActionType),
-  comments_state: commentsReducer(
-    state.comments_state,
-    action as CommentsActionType
-  ),
+  // comments_state: commentsReducer(
+  //   state.comments_state,
+  //   action as CommentsActionType
+  // ),
   bookmarks_state: bookmarksReducer(
     state.bookmarks_state,
     action as BookmarksActionType

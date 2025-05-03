@@ -4,6 +4,7 @@ import "./globals.css";
 import { GlobalContextProvider } from "@/services/context/context";
 import ProviderComp from "./StoreProvider";
 import { Toaster } from "react-hot-toast";
+import "react-comments-section/dist/index.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

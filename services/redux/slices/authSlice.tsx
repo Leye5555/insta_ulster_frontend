@@ -56,6 +56,11 @@ const authSlice = createSlice({
       cookies.remove("AUTH");
       state.status = "idle";
     },
+
+    reset: (state) => {
+      state.status = "idle";
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -78,5 +83,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, reset } = authSlice.actions;
 export default authSlice.reducer;

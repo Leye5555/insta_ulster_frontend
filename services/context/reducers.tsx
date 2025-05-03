@@ -1,7 +1,6 @@
 import {
   BookmarksStateType,
   BookmarkType,
-  CommentsStateType,
   CommentType,
   LikesStateType,
   LikeType,
@@ -104,31 +103,31 @@ export const likesReducer = (
 
 // comments reducers
 
-export const commentsReducer = (
-  state: CommentsStateType,
-  action: CommentsActionType
-): CommentsStateType => {
-  switch (action.type) {
-    case ActionTypes.ADD_COMMENT:
-      return { ...state, comments: [...state.comments, action.payload] };
-    case ActionTypes.REMOVE_COMMENT:
-      return {
-        ...state,
-        comments: state.comments.filter(
-          (comment) => comment.id !== action.payload
-        ),
-      };
-    case ActionTypes.UPDATE_COMMENT:
-      return {
-        ...state,
-        comments: state.comments.map((comment) =>
-          comment.id === action.payload.id ? action.payload : comment
-        ),
-      };
-    default:
-      return state;
-  }
-};
+// export const commentsReducer = (
+//   state: CommentsStateType,
+//   action: CommentsActionType
+// ): CommentsStateType => {
+//   switch (action.type) {
+//     case ActionTypes.ADD_COMMENT:
+//       return { ...state, comments: [...state.comments, action.payload] };
+//     case ActionTypes.REMOVE_COMMENT:
+//       return {
+//         ...state,
+//         comments: state.comments.filter(
+//           (comment) => comment.id !== action.payload
+//         ),
+//       };
+//     case ActionTypes.UPDATE_COMMENT:
+//       return {
+//         ...state,
+//         comments: state.comments.map((comment) =>
+//           comment.id === action.payload.id ? action.payload : comment
+//         ),
+//       };
+//     default:
+//       return state;
+//   }
+// };
 
 // bookmarks reducers
 
@@ -158,21 +157,21 @@ export const bookmarksReducer = (
 export type InitialStateType = {
   posts_state: PostsStateType;
   likes_state: LikesStateType;
-  comments_state: CommentsStateType;
+  // comments_state: CommentsStateType;
   bookmarks_state: BookmarksStateType;
 };
 
 export const initialState: InitialStateType = {
   posts_state: { posts: [] },
   likes_state: { likes: [] },
-  comments_state: { comments: [] },
+  // comments_state: { comments: [] },
   bookmarks_state: { bookmarks: [] },
 };
 
 export type ContextActionType =
   | PostsActionType
   | LikesActionType
-  | CommentsActionType
+  // | CommentsActionType
   | BookmarksActionType;
 
 export const combinedReducer = (
@@ -181,10 +180,10 @@ export const combinedReducer = (
 ): InitialStateType => ({
   posts_state: postsReducer(state.posts_state, action as PostsActionType),
   likes_state: likesReducer(state.likes_state, action as LikesActionType),
-  comments_state: commentsReducer(
-    state.comments_state,
-    action as CommentsActionType
-  ),
+  // comments_state: commentsReducer(
+  //   state.comments_state,
+  //   action as CommentsActionType
+  // ),
   bookmarks_state: bookmarksReducer(
     state.bookmarks_state,
     action as BookmarksActionType

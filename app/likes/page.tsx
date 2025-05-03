@@ -5,8 +5,9 @@ import NavItem from "@/components/NavItem";
 import Post from "@/components/Post";
 import SuggestedAccount from "@/components/SuggestedAccount";
 import { logout } from "@/services/redux/slices/authSlice";
+import { usePathname } from "next/navigation";
 import {
-  fetchPosts,
+  fetchPostsLikedByUser,
   reset,
   resetPosts,
 } from "@/services/redux/slices/postSlice";
@@ -14,7 +15,7 @@ import { fetchUser } from "@/services/redux/slices/user";
 import { useAppDispatch, useAppSelector } from "@/services/redux/store";
 import { formatDistanceToNow } from "date-fns";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Cookies from "universal-cookie";
@@ -43,7 +44,6 @@ const Page = () => {
     console.log("test");
     switch (item) {
       case "Home":
-        console.log("Home");
         setIsPageChange(true);
         router.push("/");
         dispatch(resetPosts());
@@ -95,7 +95,7 @@ const Page = () => {
       !isPageChange
     ) {
       setIsPageChange(true);
-      dispatch(fetchPosts(cookies.get("AUTH")));
+      dispatch(fetchPostsLikedByUser(cookies.get("AUTH")));
     }
     if (postState.status === "succeeded") {
       dispatch(reset());
@@ -163,7 +163,7 @@ const Page = () => {
           <div className="max-w-[630px] mx-auto">
             {/* Stories */}
             <div className="flex px-2 md:px-4 pt-4 pb-3 gap-3 md:gap-4 overflow-x-auto border-b border-gray-200">
-              {[
+              {/* {[
                 "omid__ha...",
                 "nathaniel...",
                 "wizkhaya",
@@ -186,7 +186,9 @@ const Page = () => {
                     {name}
                   </span>
                 </div>
-              ))}
+              ))} */}
+
+              <h1 className="text-2xl font-bold mb-4">Likes</h1>
             </div>
             {/* Posts */}
             <div className="pb-8 max-w-[470px] mt-10 mx-auto flex flex-col gap-11">
@@ -204,27 +206,25 @@ const Page = () => {
                   postId={post._id}
                 />
               ))}
-              {postState.posts_meta.posts?.length === 0 && (
-                <>
-                  <Post
-                    userId="122334"
-                    username="nathanielblow"
-                    verified
-                    timeAgo="1 d"
-                    caption="Don't miss out !"
-                    commentCount={316}
-                    postId="2323"
-                  />
-                  <Post
-                    userId="122322334"
-                    username="instablog9ja"
-                    verified
-                    timeAgo="3 h"
-                    caption="test"
-                    commentCount={316}
-                    postId="232w33"
-                  />
-                </>
+              {(postState.posts_meta.posts?.length === 0 ||
+                !postState.posts_meta.posts) && (
+                <div className="flex flex-col items-center justify-center h-full">
+                  <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-4">
+                    <Image
+                      src="/assets/empty_likes.svg"
+                      width={100}
+                      height={100}
+                      alt="No likes"
+                      className="w-16 h-16"
+                    />
+                  </div>
+                  <h1 className="text-2xl font-bold mb-4">
+                    No posts liked yet
+                  </h1>
+                  <p className="text-gray-500">
+                    When you like posts, they will show up here.
+                  </p>
+                </div>
               )}
             </div>
           </div>

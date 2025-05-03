@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { loginSchema, signupSchema } from "@/lib/definitions/schema";
-import { login, register } from "@/services/redux/slices/authSlice";
+import { login, register, reset } from "@/services/redux/slices/authSlice";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/services/redux/store";
@@ -85,6 +85,7 @@ export default function AuthForm({ isSignUp = true }: { isSignUp?: boolean }) {
       toast.success("something went wrong", {
         id: "error",
       });
+      reset();
     }
   }, [authState]);
 
@@ -233,7 +234,7 @@ export default function AuthForm({ isSignUp = true }: { isSignUp?: boolean }) {
             <Button
               type="submit"
               className={cn(
-                "max-w-[150px] min-w-[100px] mx-auto block",
+                "max-w-[150px] min-w-[100px] mx-auto block opacity-100",
                 pending && "pointer-events-none opacity-50"
               )}
             >
