@@ -35,12 +35,14 @@ const Comments = ({
 }) => {
   const dispatch = useAppDispatch();
   const userState = useAppSelector((state) => state.users);
+  const [isMounted, setIsMounted] = React.useState(false);
 
   //   const [inMemoryComments, setInMemoryComments] = React.useState<
   //     CombinedCommentType[] | undefined
   //   >(comments);
 
   useEffect(() => {
+    setIsMounted(true);
     if (!userState.user?.username) {
       dispatch(fetchUser(cookies.get("AUTH")));
     }
@@ -92,71 +94,77 @@ const Comments = ({
           {likes} Likes
         </span>
       </div>
-      <CommentSection
-        overlayStyle={{
-          overflow: isCollapsed ? "hidden" : "auto",
-          maxHeight: isCollapsed ? "0px" : "max-content",
-          display: isCollapsed ? "none" : "block",
-          transition: "max-height 1s ease-in-out, display 2s ease-in-out",
-        }}
-        currentUser={{
-          currentUserId: userState.user?._id,
-          currentUserImg: `https://ui-avatars.com/api/?name=${
-            userState.user?.username ?? "username"
-          }&background=random`,
-          currentUserProfile: `https://ui-avatars.com/api/?name=${
-            userState.user?.username ?? "username"
-          }&background=random`,
-          currentUserFullName: userState.user?.username ?? "username",
-        }}
-        commentData={
-          (isCollapsed
-            ? (comments as CombinedCommentType[])?.slice(0, 1)
-            : (comments as CombinedCommentType[])
-          ).map((comment) => ({
-            ...comment,
-            userId: comment.userId,
-            comId: comment._id,
-            postId: comment.postId,
-            fullName: comment.username,
-            userProfile: `https://ui-avatars.com/api/?name=${comment.username}`,
-            text: comment.text,
-            avatarUrl: `https://ui-avatars.com/api/?name=${comment.username}`,
-            timestamp: comment.createdAt,
-            replies:
-              (comment.replies as CombinedCommentType[]).map((rep) => ({
-                ...rep,
-                userId: rep.userId,
-                comId: rep._id,
-                postId: rep.postId,
-                fullName: rep.username,
-                userProfile: `https://ui-avatars.com/api/?name=${rep.username}`,
-                text: rep.text,
-                avatarUrl: `https://ui-avatars.com/api/?name=${rep.username}`,
-                timestamp: rep.createdAt,
-                replies: rep.replies || [],
-                parentOfRepliedCommentId: rep.commentID,
-                repliedToCommentId: rep.repliedToCommentId,
-                isEdited: rep.isEdited,
-                comIdToDelete: rep.comIdToDelete,
-              })) ?? [],
-            parentOfRepliedCommentId: comment.commentID,
-            repliedToCommentId: comment.repliedToCommentId,
-            isEdited: comment.isEdited,
-            comIdToDelete: comment.comIdToDelete,
-          })) ?? []
-        }
-        onSubmitAction={(data: unknown) => onSubmitAction(data as CommentData)}
-        onReplyAction={(data: unknown) => onReplyAction(data as CommentData)}
-        onDeleteAction={(data: unknown) => onDeleteComment(data as CommentData)}
-        onEditAction={(data: unknown) => onEditComment(data as CommentData)}
-        customNoComment={() => null}
-        logIn={{
-          onLogin: () => alert("Call login function "),
-          signUpLink: "http://localhost:3000/register",
-        }}
-        placeHolder="Write your comment..."
-      />
+      {isMounted && (
+        <CommentSection
+          overlayStyle={{
+            overflow: isCollapsed ? "hidden" : "auto",
+            maxHeight: isCollapsed ? "0px" : "max-content",
+            display: isCollapsed ? "none" : "block",
+            transition: "max-height 1s ease-in-out, display 2s ease-in-out",
+          }}
+          currentUser={{
+            currentUserId: userState.user?._id,
+            currentUserImg: `https://ui-avatars.com/api/?name=${
+              userState.user?.username ?? "username"
+            }&background=random`,
+            currentUserProfile: `https://ui-avatars.com/api/?name=${
+              userState.user?.username ?? "username"
+            }&background=random`,
+            currentUserFullName: userState.user?.username ?? "username",
+          }}
+          commentData={
+            (isCollapsed
+              ? (comments as CombinedCommentType[])?.slice(0, 1)
+              : (comments as CombinedCommentType[])
+            ).map((comment) => ({
+              ...comment,
+              userId: comment.userId,
+              comId: comment._id,
+              postId: comment.postId,
+              fullName: comment.username,
+              userProfile: `https://ui-avatars.com/api/?name=${comment.username}`,
+              text: comment.text,
+              avatarUrl: `https://ui-avatars.com/api/?name=${comment.username}`,
+              timestamp: comment.createdAt,
+              replies:
+                (comment.replies as CombinedCommentType[]).map((rep) => ({
+                  ...rep,
+                  userId: rep.userId,
+                  comId: rep._id,
+                  postId: rep.postId,
+                  fullName: rep.username,
+                  userProfile: `https://ui-avatars.com/api/?name=${rep.username}`,
+                  text: rep.text,
+                  avatarUrl: `https://ui-avatars.com/api/?name=${rep.username}`,
+                  timestamp: rep.createdAt,
+                  replies: rep.replies || [],
+                  parentOfRepliedCommentId: rep.commentID,
+                  repliedToCommentId: rep.repliedToCommentId,
+                  isEdited: rep.isEdited,
+                  comIdToDelete: rep.comIdToDelete,
+                })) ?? [],
+              parentOfRepliedCommentId: comment.commentID,
+              repliedToCommentId: comment.repliedToCommentId,
+              isEdited: comment.isEdited,
+              comIdToDelete: comment.comIdToDelete,
+            })) ?? []
+          }
+          onSubmitAction={(data: unknown) =>
+            onSubmitAction(data as CommentData)
+          }
+          onReplyAction={(data: unknown) => onReplyAction(data as CommentData)}
+          onDeleteAction={(data: unknown) =>
+            onDeleteComment(data as CommentData)
+          }
+          onEditAction={(data: unknown) => onEditComment(data as CommentData)}
+          customNoComment={() => null}
+          logIn={{
+            onLogin: () => alert("Call login function "),
+            signUpLink: "http://localhost:3000/register",
+          }}
+          placeHolder="Write your comment..."
+        />
+      )}
       {isCollapsed && (comments as CommentData[])?.length >= 1 && (
         <button
           className="text-xs float-right text-blue-500 cursor-pointer"

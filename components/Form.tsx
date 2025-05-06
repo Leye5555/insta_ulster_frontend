@@ -87,7 +87,7 @@ export default function AuthForm({ isSignUp = true }: { isSignUp?: boolean }) {
       });
       reset();
     }
-  }, [authState]);
+  }, [authState, router]);
 
   return (
     <>

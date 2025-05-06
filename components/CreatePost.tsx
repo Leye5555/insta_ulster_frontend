@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import ImagePicker from "./ImagePicker";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
@@ -24,11 +24,11 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
   const postState = useAppSelector((state) => state.posts);
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setSelectedFile(null);
     setSelectedFileUrl("");
     setCaption("");
-  };
+  }, []);
 
   const onSubmit = (data: z.infer<typeof postSchema>) => {
     setIsLoading(true);

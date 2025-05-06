@@ -1,23 +1,22 @@
 "use client";
-import { GlobalContext } from "@/services/context/context";
-import { ActionTypes } from "@/services/context/enums";
-import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
-import Comments from "./Comments";
-import { useAppDispatch, useAppSelector } from "@/services/redux/store";
 import { fetchComments } from "@/services/redux/slices/commentsSlice";
 import {
   likePost,
   LikeType,
   unlikePost,
 } from "@/services/redux/slices/likesSlice";
+import { useAppDispatch, useAppSelector } from "@/services/redux/store";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
+import Comments from "./Comments";
+import { Button } from "./ui/button";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 
 const cookies = new Cookies(null, { path: "/" });
 
 // Post Component
 const Post = ({
-  userId,
   username,
   verified = false,
   timeAgo,
@@ -37,12 +36,12 @@ const Post = ({
   mediaUrl?: string;
   postId: string;
 }) => {
-  const { state, dispatch } = useContext(GlobalContext);
   const reduxDispatch = useAppDispatch();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const commentsState = useAppSelector((state) => state.comments);
   const [likeCount, setLikeCount] = useState(likes?.length || 0);
   const [likeState, setLikeState] = useState(likes);
+  const [isMounted, setIsMounted] = useState(false);
   const handleLike = (postId: string) => {
     console.log(likes);
     const [, token_sub] = cookies.get("AUTH").split(".");
@@ -66,6 +65,10 @@ const Post = ({
       reduxDispatch(likePost({ postId }));
     }
   };
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, [setIsMounted]);
   const handleCommentClick = () => {
     setIsCollapsed(!isCollapsed);
     reduxDispatch(fetchComments({ postId }));
@@ -142,7 +145,13 @@ const Post = ({
             <button onClick={handleCommentClick}>💬</button>
             <button>📤</button>
           </div>
-          <span>🔖</span>
+          <Button>
+            {bookmarks?.includes(postId) ? (
+              <Bookmark onClick={handleBookmark} />
+            ) : (
+              <BookmarkCheck onClick={handleBookmark} />
+            )}
+          </Button>
         </div>
         {likeCount > 0 && (
           <div className="text-sm font-semibold">{likeCount} likes</div>
@@ -164,14 +173,16 @@ const Post = ({
         )} */}
 
         <div className="mt-2 react-comments">
-          <Comments
-            postId={postId as string}
-            comments={commentsState.commentsObject[postId] || []}
-            isCollapsed={isCollapsed}
-            setIsCollapsed={setIsCollapsed}
-            likes={likeCount}
-            commentCount={commentCount}
-          />
+          {isMounted && (
+            <Comments
+              postId={postId as string}
+              comments={commentsState.commentsObject[postId] || []}
+              isCollapsed={isCollapsed}
+              setIsCollapsed={setIsCollapsed}
+              likes={likeCount}
+              commentCount={commentCount}
+            />
+          )}
         </div>
       </div>
     </div>

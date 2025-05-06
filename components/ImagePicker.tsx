@@ -9,10 +9,13 @@ function ImagePicker({
     React.SetStateAction<Blob | null | undefined>
   >;
 }) {
-  const onDrop = useCallback((acceptedFiles: Blob[]) => {
-    // Do something with the files
-    setSelectedFile(acceptedFiles[0]);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: Blob[]) => {
+      // Do something with the files
+      setSelectedFile(acceptedFiles[0]);
+    },
+    [setSelectedFile]
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
