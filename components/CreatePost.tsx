@@ -150,21 +150,94 @@ const CreatePostModal = ({ onClose }: { onClose: () => void }) => {
         {/* post input section */}
         {caption && (
           <div className="w-full border-t border-gray-200 p-4 flex justify-center flex-col gap-4">
-            <textarea
-              rows={4}
-              cols={50}
-              required
-              {...register("content")}
-              placeholder="Write a caption..."
-              className="w-full px-4 py-2"
-            />
-            {errors.content && (
-              <span className="text-red-500 text-sm">
-                {errors.content.message}
+            <div className="flex flex-col gap-1 mt-2">
+              <label
+                className="text-sm text-gray-600 font-medium"
+                htmlFor="caption"
+              >
+                Caption
+              </label>
+              <textarea
+                rows={4}
+                cols={50}
+                required
+                {...register("content")}
+                placeholder="Write a caption..."
+                className="w-full px-4 py-2"
+              />
+              {errors.content && (
+                <span className="text-red-500 text-sm">
+                  {errors.content.message}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col gap-1 mt-2">
+              <label
+                className="text-sm text-gray-600 font-medium"
+                htmlFor="tags"
+              >
+                Tags
+              </label>
+              <input
+                id="tags"
+                type="text"
+                {...register("tags")}
+                placeholder="Add tags, separated by commas (e.g. travel,food,fun)"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <span className="text-xs text-gray-500">
+                Tags help others discover your post.
               </span>
-            )}
+            </div>
+            {/* Advanced Image Details Section */}
+            <div className="w-full">
+              <details className="w-full border rounded-md">
+                <summary className="px-4 py-2 cursor-pointer font-medium text-gray-700 hover:bg-gray-50">
+                  Advanced Image Details
+                </summary>
+                <div className="px-4 py-3 flex flex-col gap-3 border-t">
+                  {/* Title field */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-sm text-gray-600">Title</label>
+                    <input
+                      type="text"
+                      {...register("imageTitle")}
+                      placeholder="Add a title for this image"
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+
+                  {/* Location field */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-sm text-gray-600">Location</label>
+                    <input
+                      type="text"
+                      {...register("imageLocation")}
+                      placeholder="Add a location"
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+
+                  {/* Alt Text field */}
+                  <div className="flex flex-col gap-1">
+                    <label className="text-sm text-gray-600">Alt Text</label>
+                    <textarea
+                      rows={2}
+                      {...register("imageAlt")}
+                      placeholder="Describe this image for vision-impaired people"
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                    <span className="text-xs text-gray-500">
+                      Good alt text is concise, descriptive, and under 125
+                      characters
+                    </span>
+                  </div>
+                </div>
+              </details>
+            </div>
             <div className="flex gap-4">
               <button
+                type="button"
                 onClick={() => handleReset()}
                 className="bg-red-500 text-white px-4 py-2 rounded-md flex-[1]"
               >

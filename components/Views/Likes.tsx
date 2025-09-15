@@ -214,6 +214,10 @@ const Likes = () => {
                       post.img_url + `?${postState.posts_meta.sas_token}`
                     }
                     postId={post._id}
+                    imageTitle={post.imageTitle}
+                    imageLocation={post.imageLocation}
+                    imageAlt={post.imageAlt}
+                    tags={post.tags}
                   />
                 ))}
                 {(postState.posts_meta.posts?.length === 0 ||
@@ -278,14 +282,32 @@ const Likes = () => {
               {
                 user: "_haadjamshidi",
                 info: "Followed by omid__hashemzade...",
+                url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
               },
-              { user: "joel.aboderin", info: "Suggested for you" },
-              { user: "benabu2003", info: "Suggested for you" },
-              { user: "iam_vickvibez", info: "Suggested for you" },
-              { user: "olajideishola", info: "Followed by yemisi.o" },
+              {
+                user: "joel.aboderin",
+                info: "Suggested for you",
+                url: "https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
+              {
+                user: "benabu2003",
+                info: "Suggested for you",
+                url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3648&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
+              {
+                user: "iam_vickvibez",
+                info: "Suggested for you",
+                url: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
+              {
+                user: "olajideishola",
+                info: "Followed by yemisi.o",
+                url: "https://plus.unsplash.com/premium_photo-1693000697180-4e285198d71c?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
             ].map((suggestion, i) => (
               <SuggestedAccount
                 key={i}
+                url={suggestion.url}
                 username={suggestion.user}
                 info={suggestion.info}
               />
@@ -314,7 +336,7 @@ const Likes = () => {
                 <span>•</span>
                 <span>Meta Verified</span>
               </div>
-              <div className="mt-4">© 2025 INSTAGRAM FROM META</div>
+              <div className="mt-4">© 2025 INSTAULSTER FROM FAITH</div>
             </div>
           </aside>
 

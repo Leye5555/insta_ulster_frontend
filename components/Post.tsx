@@ -17,6 +17,7 @@ const cookies = new Cookies(null, { path: "/" });
 
 // Post Component
 const Post = ({
+  userId,
   username,
   verified = false,
   timeAgo,
@@ -25,6 +26,10 @@ const Post = ({
   commentCount,
   mediaUrl,
   postId,
+  imageTitle,
+  imageLocation,
+  imageAlt,
+  tags,
 }: {
   userId: string;
   username: string;
@@ -35,6 +40,10 @@ const Post = ({
   commentCount?: number;
   mediaUrl?: string;
   postId: string;
+  imageTitle?: string;
+  imageLocation?: string;
+  imageAlt?: string;
+  tags?: string[] | string;
 }) => {
   const reduxDispatch = useAppDispatch();
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -124,19 +133,46 @@ const Post = ({
       </div>
       {/* Post Image/Video */}
       <div className="bg-black aspect-square w-full flex items-center justify-center">
-        {/* Placeholder for media */}
         <div className="w-full h-full bg-gray-700">
           {mediaUrl && (
             <Image
               src={mediaUrl}
               width={500}
               height={500}
-              alt="Post"
+              alt={imageAlt || "Post"}
               className="w-full h-full object-cover"
             />
           )}
         </div>
       </div>
+      {(imageTitle || imageLocation || (tags && tags.length)) && (
+        <div className="px-2 pt-2 pb-1 text-xs text-gray-500">
+          {imageTitle && (
+            <div>
+              <span className="font-semibold text-gray-700">{imageTitle}</span>
+            </div>
+          )}
+          {imageLocation && (
+            <div>
+              <span className="italic">📍 {imageLocation}</span>
+            </div>
+          )}
+          {tags && (
+            <div className="flex flex-wrap gap-1 mt-1">
+              {(Array.isArray(tags) ? tags : tags.split(",")).map((tag, idx) =>
+                tag.trim() ? (
+                  <span
+                    key={idx}
+                    className="bg-gray-200 text-gray-700 rounded px-2 py-0.5 text-xs"
+                  >
+                    #{tag.trim()}
+                  </span>
+                ) : null
+              )}
+            </div>
+          )}
+        </div>
+      )}
       {/* Post Actions */}
       <div className="pt-3">
         <div className="flex justify-between mb-2">

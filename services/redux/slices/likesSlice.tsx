@@ -3,7 +3,8 @@ import Cookies from "universal-cookie";
 import axios from "axios";
 
 const cookies = new Cookies(null, { path: "/" });
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8003";
+const API_URL =
+  process.env.NEXT_PUBLIC_APP_API_LIKES || "http://localhost:8003";
 
 // Types
 export type LikeType = {

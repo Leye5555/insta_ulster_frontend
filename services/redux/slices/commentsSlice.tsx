@@ -6,7 +6,7 @@ import { CombinedCommentType } from "@/components/Comments";
 
 const cookies = new Cookies(null, { path: "/" });
 const API_URL =
-  process.env.NEXT_PUBLIC_API_URL_COMMENTS || "http://localhost:8002/v1";
+  (process.env.NEXT_PUBLIC_APP_API_COMMENTS || "http://localhost:8002") + "/v1";
 
 // Async thunks
 

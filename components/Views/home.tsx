@@ -169,22 +169,50 @@ const Home = () => {
               {/* Stories */}
               <div className="flex px-2 md:px-4 pt-4 pb-3 gap-3 md:gap-4 overflow-x-auto border-b border-gray-200">
                 {[
-                  "omid__ha...",
-                  "nathaniel...",
-                  "wizkhaya",
-                  "cuppymu...",
-                  "fireboy...",
-                  "teknom...",
-                  "anniedbia1",
-                  "charles_...",
-                ].map((name, i) => (
+                  {
+                    name: "omid__ha...",
+                    url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  },
+                  {
+                    name: "pak.yio",
+                    url: "https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  },
+                  {
+                    name: "benabu2003",
+                    url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3648&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  },
+                  {
+                    name: "iam_vickvibez",
+                    url: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  },
+                  {
+                    name: "olajideishola",
+                    url: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=3149&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  },
+                  {
+                    name: "charles...",
+                    url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3648&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  },
+                  {
+                    name: "nathaniel...",
+                    url: "https://plus.unsplash.com/premium_photo-1693000697180-4e285198d71c?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                  },
+                ].map(({ name, url }, i) => (
                   <div
                     key={i}
                     className="flex flex-col items-center min-w-[60px]"
                   >
                     <div className="rounded-full bg-gradient-to-tr from-yellow-500 to-pink-500 p-[2px]">
                       <div className="bg-white rounded-full p-[2px]">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gray-200 overflow-hidden"></div>
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gray-200 overflow-hidden">
+                          <Image
+                            src={url}
+                            width={100}
+                            height={100}
+                            alt="user profile"
+                            className="rounded-full min-w-[100%] min-h-[100%] object-cover"
+                          />
+                        </div>
                       </div>
                     </div>
                     <span className="text-xs mt-1 truncate w-14 text-center">
@@ -277,16 +305,34 @@ const Home = () => {
               {
                 user: "_haadjamshidi",
                 info: "Followed by omid__hashemzade...",
+                url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
               },
-              { user: "joel.aboderin", info: "Suggested for you" },
-              { user: "benabu2003", info: "Suggested for you" },
-              { user: "iam_vickvibez", info: "Suggested for you" },
-              { user: "olajideishola", info: "Followed by yemisi.o" },
+              {
+                user: "joel.aboderin",
+                info: "Suggested for you",
+                url: "https://plus.unsplash.com/premium_photo-1673866484792-c5a36a6c025e?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
+              {
+                user: "benabu2003",
+                info: "Suggested for you",
+                url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3648&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
+              {
+                user: "iam_vickvibez",
+                info: "Suggested for you",
+                url: "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
+              {
+                user: "olajideishola",
+                info: "Followed by yemisi.o",
+                url: "https://plus.unsplash.com/premium_photo-1693000697180-4e285198d71c?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+              },
             ].map((suggestion, i) => (
               <SuggestedAccount
                 key={i}
                 username={suggestion.user}
                 info={suggestion.info}
+                url={suggestion.url}
               />
             ))}
             {/* Footer */}
@@ -313,7 +359,7 @@ const Home = () => {
                 <span>•</span>
                 <span>Meta Verified</span>
               </div>
-              <div className="mt-4">© 2025 INSTAGRAM FROM META</div>
+              <div className="mt-4">© 2025 INSTAULSTER FROM FAITH</div>
             </div>
           </aside>
 

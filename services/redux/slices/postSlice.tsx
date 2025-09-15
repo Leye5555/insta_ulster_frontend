@@ -12,7 +12,7 @@ export type PostType = {
   createdAt: string;
   updatedAt: string;
   userId: string;
-  tags: string[];
+  tags?: string[];
   comments: CommentType[];
   likes: LikeType[];
   dislikes: LikeType[];
@@ -20,6 +20,10 @@ export type PostType = {
   views: string[];
   reports: string[];
   saved: string[];
+  imageAlt?: string;
+  imageTitle?: string;
+  imageLocation?: string;
+
   user: {
     _id: string;
     username: string;

@@ -43,9 +43,17 @@ const signupSchema = object({
     .trim(),
   role: z.string(),
 });
-const postSchema = object({
-  content: z.string().min(1, { message: "Content is required." }),
+const postSchema = z.object({
+  content: z.string().min(1, "Caption is required"),
+  tags: z.string().optional(),
+  imageTitle: z.string().optional(),
+  imageLocation: z.string().optional(),
+  imageAlt: z
+    .string()
+    .max(125, "Alt text should be under 125 characters")
+    .optional(),
 });
+
 export { loginSchema, signupSchema, postSchema };
 
 export type FormState =

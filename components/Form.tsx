@@ -162,7 +162,7 @@ export default function AuthForm({ isSignUp = true }: { isSignUp?: boolean }) {
                         <SelectItem defaultChecked value="user">
                           User
                         </SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="admin">Creator</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormControl>

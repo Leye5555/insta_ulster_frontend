@@ -3,10 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm run build
-
-FROM node:22-alpine AS runner
-WORKDIR /app
-COPY --from=builder /app ./
-EXPOSE 80
-CMD ["npm", "start"]
+# do not build the app in the container
+# this ensures that env variables are available
+# when built later in azure
+CMD ["sh", "-c", "npm run build && npm start"]
